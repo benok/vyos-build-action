@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v1.2.*'
+  workflow_dispatch:
 
 env:
   GIT_CLONE_URL: https://github.com/vyos/vyos-build
