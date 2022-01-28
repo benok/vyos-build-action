@@ -1,9 +1,6 @@
 name: VyOS v1.2.x LTS Release
 
 on:
-  push:
-    tags:
-      - 'v1.2.*'
   workflow_dispatch:
 
 env:
