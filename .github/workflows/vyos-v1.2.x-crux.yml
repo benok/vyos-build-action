@@ -13,7 +13,7 @@ env:
   BUILD_ARCH: amd64
   BUILD_BY: vyos-build-action@github.com
   BUILD_TYPE: release
-  BUILD_VERSION: 1.2.0
+  BUILD_VERSION: 1.2.1
   BUILD_QEMU: true
   BUILD_QCOW2: true
   BUILD_HYPERV: true
