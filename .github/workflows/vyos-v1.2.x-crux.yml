@@ -1,4 +1,4 @@
-name: VyOS v1.2.x LTS Release
+name: VyOS v1.2.7 LTS Release
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ env:
   BUILD_ARCH: amd64
   BUILD_BY: vyos-build-action@github.com
   BUILD_TYPE: release
-  BUILD_VERSION: 1.2.6
+  BUILD_VERSION: 1.2.7
   BUILD_QEMU: true
   BUILD_QCOW2: true
   BUILD_HYPERV: true
