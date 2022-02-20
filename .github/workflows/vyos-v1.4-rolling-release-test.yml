@@ -1,9 +1,9 @@
-name: VyOS v1.4 Rolling Release
+name: VyOS v1.4 Rolling Release Test
 
 on:
   push:
     tags:
-      - 'v1.2.*'
+      - 'v1.4.*'
   workflow_dispatch:
 
 env:
