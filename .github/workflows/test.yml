@@ -46,7 +46,7 @@ jobs:
         working-directory: ./${{ env.WORKING_DIR }}
         run: |
           sudo make iso && echo $STATUS_SUCCESS
-          cp -f ./build/vyos-$BUILD_VERSION-$(date +%Y%m%d%H%M)-$BUILD_ARCH.iso ./$ARTIFACTS_DIR/
+          cp -f ./build/vyos-$BUILD_VERSION-*-$BUILD_ARCH.iso ./$ARTIFACTS_DIR/
 
       - name: Build QEMU Image
         id: qemu
