@@ -1,4 +1,4 @@
-name: VyOS v1.4 Rolling Release
+name: VyOS v1.4 Rolling Release test
 
 on:
   schedule:
