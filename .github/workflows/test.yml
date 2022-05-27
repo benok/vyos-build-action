@@ -30,13 +30,10 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: vyos/vyos-build:equuleus
+      image: vyos/vyos-build:current
       options: --workdir /vyos --privileged
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Clone Source Code
         run: |
           git clone -b $BRANCH --single-branch $GIT_CLONE_URL $WORKING_DIR
