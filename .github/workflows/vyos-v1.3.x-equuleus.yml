@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v1.3.*'
+    branches:
+      - master
   workflow_dispatch:
 
 env:
