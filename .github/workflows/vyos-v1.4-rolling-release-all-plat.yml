@@ -95,17 +95,17 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images
+          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          asset_iso=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}.iso" | xargs)
-          asset_img=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-qemu.img" | xargs)
-          asset_qcw=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-qemu.qcow2" | xargs)
-          asset_vhd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-hyperv.vhd" | xargs)
-          asset_ova=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-vmware-signed.ova" | xargs)
-          asset_vmd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-vmware.vmdk" | xargs)
-          tag_name="v${{ env.VERSION }}"
+          asset_iso=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}.iso" | xargs)
+          asset_img=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-qemu.img" | xargs)
+          asset_qcw=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-qemu.qcow2" | xargs)
+          asset_vhd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-hyperv.vhd" | xargs)
+          asset_ova=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-vmware-signed.ova" | xargs)
+          asset_vmd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-vmware.vmdk" | xargs)
+          tag_name="v${{ env.BUILD_VERSION }}"
           hub release edit -a "$asset_iso" -a "$asset_img" -a "$asset_qcw" -a "$asset_vhd" -a "$asset_ova" -a "$asset_vmd" -m "" "$tag_name"        
