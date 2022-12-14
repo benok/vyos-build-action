@@ -8,8 +8,7 @@ on:
 
 env:
   GIT_CLONE_URL: https://github.com/vyos/vyos-build
-#  DEBIAN_MIRROR: http://ftp.us.debian.org/debian/
-  DEBIAN_MIRROR: http://ftp.yz.yamagata-u.ac.jp/debian/
+  DEBIAN_MIRROR: http://ftp.us.debian.org/debian/
   BRANCH: current
   BUILD_ARCH: amd64
   BUILD_BY: vyos-build-action@github.com
@@ -96,7 +95,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.$DATE }}-images
+          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images
 
       - name: Release
         env:
