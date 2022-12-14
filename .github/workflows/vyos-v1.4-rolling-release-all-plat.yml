@@ -37,9 +37,9 @@ jobs:
     steps:
       - name: Build time
         run: echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+        
       - name: Checkout
         uses: actions/checkout@v3
-
       - name: Clone Source Code
         run: |
           git clone -b $BRANCH --single-branch $GIT_CLONE_URL $WORKING_DIR
@@ -86,6 +86,8 @@ jobs:
         with:
           name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ env.DATE }}-images
           path: ${{ env.WORKING_DIR }}/${{ env.ARTIFACTS_DIR }}
+    outputs:
+      build_time: ${{ env.DATE }}
 
   release:
     needs: build
@@ -95,17 +97,17 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images
+          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.buildtime }}-images
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          asset_iso=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}.iso" | xargs)
-          asset_img=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-qemu.img" | xargs)
-          asset_qcw=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-qemu.qcow2" | xargs)
-          asset_vhd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-hyperv.vhd" | xargs)
-          asset_ova=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-vmware-signed.ova" | xargs)
-          asset_vmd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.env.DATE }}-vmware.vmdk" | xargs)
+          asset_iso=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}.iso" | xargs)
+          asset_img=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-qemu.img" | xargs)
+          asset_qcw=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-qemu.qcow2" | xargs)
+          asset_vhd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-hyperv.vhd" | xargs)
+          asset_ova=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-vmware-signed.ova" | xargs)
+          asset_vmd=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-images/ -name "vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-${{ needs.build.outputs.build_time }}-vmware.vmdk" | xargs)
           tag_name="v${{ env.BUILD_VERSION }}"
           hub release edit -a "$asset_iso" -a "$asset_img" -a "$asset_qcw" -a "$asset_vhd" -a "$asset_ova" -a "$asset_vmd" -m "" "$tag_name"        
