@@ -50,7 +50,7 @@ jobs:
         working-directory: ./${{ env.WORKING_DIR }}
         run: |
           sudo make clean
-          sudo ./build-vyos-image iso --architecture $BUILD_ARCH --build-by $BUILD_BY --build-type $BUILD_TYPE --version $BUILD_VERSION-$DATE && echo $STATUS_SUCCESS
+          sudo ./build-vyos-image iso --architecture $BUILD_ARCH --build-by $BUILD_BY --build-type $BUILD_TYPE --version $BUILD_VERSION-$DATE --debian-mirror $DEBIAN_MIRROR && echo $STATUS_SUCCESS
           cp -f ./build/vyos-${{ env.BUILD_VERSION }}-*.iso ./$ARTIFACTS_DIR/
 
       - name: Build QEMU Image
