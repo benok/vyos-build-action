@@ -44,13 +44,13 @@ jobs:
         run: |
           git clone -b $BRANCH --single-branch $GIT_CLONE_URL $WORKING_DIR
           cd $WORKING_DIR
+          ./configure --architecture $BUILD_ARCH --build-by $BUILD_BY --build-type $BUILD_TYPE --version $BUILD_VERSION
           mkdir -p ./$ARTIFACTS_DIR
       - name: Build ISO Image
         id: iso
         working-directory: ./${{ env.WORKING_DIR }}
         run: |
-          sudo make clean
-          sudo ./build-vyos-image iso --architecture $BUILD_ARCH --build-by $BUILD_BY --build-type $BUILD_TYPE --version $BUILD_VERSION-$DATE && echo $STATUS_SUCCESS
+          sudo make iso && echo $STATUS_SUCCESS
           cp -f ./build/vyos-${{ env.BUILD_VERSION }}-*.iso ./$ARTIFACTS_DIR/
 
       - name: Build QEMU Image
