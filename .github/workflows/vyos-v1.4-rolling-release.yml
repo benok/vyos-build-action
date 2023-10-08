@@ -10,7 +10,7 @@ on:
 
 env:
   GIT_CLONE_URL: https://github.com/vyos/vyos-build
-  BRANCH: current
+  BRANCH: sagitta
   ARCHITECTURE: amd64
   BUILD_BY: vyos-build-action@github.com
   BUILD_TYPE: release
@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: vyos/vyos-build:current
+      image: vyos/vyos-build:sagitta
       options: --workdir /vyos --privileged
 
     steps:
