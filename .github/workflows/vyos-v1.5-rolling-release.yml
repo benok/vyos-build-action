@@ -33,6 +33,7 @@ jobs:
       - name: build
         run: |
           docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current cd vyos-1x ; dpkg-buildpackage -uc -us -tc -b
+          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current-arm64 cd vyos-1x ; dpkg-buildpackage -uc -us -tc -b
           ls -al ./vyos-1x*.deb
           pwd
           ls
