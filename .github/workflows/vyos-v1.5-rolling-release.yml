@@ -19,6 +19,24 @@ env:
   VYOS_MIRROR: https://rolling-packages.vyos.net/current/
 
 jobs:
+  build_package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Add qemu
+        uses: docker/setup-qemu-action@v2
+      - name: CheckOut
+        uses: actions/checkout@v4.1.1
+      - name: clone
+        run: git clone https://github.com/vyos/vyos-1x
+      - name: build
+        run: |
+          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current cd vyos-1x ; dpkg-buildpackage -uc -us -tc -b
+          ls -al ./vyos-1x*.deb
+          pwd
+          ls
+          cd vyos-1x ; ls
   build_container:
     runs-on: ubuntu-latest
     steps:
@@ -76,10 +94,10 @@ jobs:
         run: |
           docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current pwd
           docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current ls
-           docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current sudo make test
-           docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current sudo make testc
-           sudo rm -rf vyos-build-test
-           sudo rm -rf vyos-build-test-amd64
+          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current sudo make test
+          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current sudo make testc
+          sudo rm -rf vyos-build-test
+          sudo rm -rf vyos-build-test-amd64
 
   test_arm64:
     # needs: build_container
