@@ -44,7 +44,7 @@ jobs:
       - name: Build and Push to GitHub Container Registry
         uses: docker/build-push-action@v3
         with:
-          context: ./vyos-build
+          context: ./vyos-build/
           platforms: linux/amd64,linux/arm64
           builder: ${{ steps.buildx.outputs.name }}
           push: true
