@@ -21,6 +21,9 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container:
+      image: vyos/vyos-build:current
+      options: --workdir /vyos --privileged
     steps:
       - name: Checkout
         uses: actions/checkout@v3
