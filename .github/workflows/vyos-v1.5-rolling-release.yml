@@ -74,8 +74,8 @@ jobs:
           cp ./vyos-build-test-amd64/build/live-image-amd64.hybrid.iso ./vyos-build-test/build/
       - name: Test iso
         run: |
-          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current sudo make test
-          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current sudo make testc
+          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current sudo make test
+          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current sudo make testc
           sudo rm -rf vyos-build-test
           sudo rm -rf vyos-build-test-amd64
 
@@ -102,8 +102,8 @@ jobs:
           cp ./vyos-build-test-arm64/build/live-image-arm64.hybrid.iso ./vyos-build-test/build/
       - name: Test iso
         run: |
-          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo make test
-          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo make testc
+          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo make test
+          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build-test:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo make testc
           sudo rm -rf vyos-build-test
           sudo rm -rf vyos-build-test-arm64
 
