@@ -94,14 +94,14 @@ jobs:
           git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test
       - name: build iso
         run: |
-          docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos vyos/vyos-build:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror https://rolling-packages.vyos.net/current/ --debian-mirror http://deb.debian.org/debian/ --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
+          docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror https://rolling-packages.vyos.net/current/ --debian-mirror http://deb.debian.org/debian/ --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
       - name: copy iso
         run: |
           cp ./vyos-build-test-arm64/build/live-image-arm64.hybrid.iso ./vyos-build-test/build/
       - name: Test iso
         run: |
-          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current sudo make test
-          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current sudo make testc
+          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo make test
+          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo make testc
           sudo rm -rf vyos-build-test
           sudo rm -rf vyos-build-test-arm64
 
