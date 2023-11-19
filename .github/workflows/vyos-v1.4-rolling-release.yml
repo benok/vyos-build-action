@@ -1,9 +1,9 @@
 name: VyOS v1.4 Rolling Release
 
 on:
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
   schedule:
     - cron: 0 3 * * *
   workflow_dispatch:
