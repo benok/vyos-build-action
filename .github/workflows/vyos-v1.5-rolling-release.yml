@@ -70,6 +70,7 @@ jobs:
           docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos vyos/vyos-build:current sudo --preserve-env ./build-vyos-image --architecture amd64 --build-by $BUILD_BY --vyos-mirror https://rolling-packages.vyos.net/current/ --debian-mirror http://deb.debian.org/debian/ --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
       - name: copy iso
         run: |
+          mkdir -p ./vyos-build-test/build/
           cp ./vyos-build-test-amd64/build/live-image-amd64.hybrid.iso ./vyos-build-test/build/
       - name: Test iso
         run: |
@@ -97,6 +98,7 @@ jobs:
           docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos vyos/vyos-build:current-arm64 sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror https://rolling-packages.vyos.net/current/ --debian-mirror http://deb.debian.org/debian/ --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
       - name: copy iso
         run: |
+          mkdir -p ./vyos-build-test/build/
           cp ./vyos-build-test-arm64/build/live-image-arm64.hybrid.iso ./vyos-build-test/build/
       - name: Test iso
         run: |
