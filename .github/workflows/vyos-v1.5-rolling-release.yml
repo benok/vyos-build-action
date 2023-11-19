@@ -19,6 +19,28 @@ env:
   VYOS_MIRROR: https://rolling-packages.vyos.net/current/
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: clone vyos-build
+        run: git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test
+
+      - name: Build iso
+        working-directory: ./vyos-build-test
+        run: |
+          sudo make clean
+          sudo ./build-vyos-image iso --architecture $ARCHITECTURE --build-by $BUILD_BY --build-type $BUILD_TYPE --version $VERSION --vyos-mirror $VYOS_MIRROR --custom-package vyos-1x-smoketest
+
+      - name: Test iso
+        working-directory: ./vyos-build-test
+        run: |
+          sudo make test
+          sudo make testc
+          sudo rm -rf vyos-build-test
+
   build:
     runs-on: ubuntu-latest
     container:
@@ -62,3 +84,12 @@ jobs:
           asset=$(find ./vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso/ -name "vyos-${{ env.VERSION }}-*.iso" | xargs)
           tag_name="v${{ env.VERSION }}"
           gh release upload "$tag_name" "$asset"
+  notificate:
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Send Discord notification
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: 'failed to build vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso'
