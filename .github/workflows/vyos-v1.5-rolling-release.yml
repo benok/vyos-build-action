@@ -32,8 +32,8 @@ jobs:
         run: git clone https://github.com/vyos/vyos-1x
       - name: build
         run: |
-          docker run --platform linux/amd64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current bash -c "cd vyos-1x ; dpkg-buildpackage -uc -us -tc -b"
-          docker run --platform linux/arm64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current-arm64 bash -c "cd vyos-1x ; dpkg-buildpackage -uc -us -tc -b"
+          docker run --platform linux/amd64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current bash -c "sysctl -w net.ipv6.conf.all.disable_ipv6=0 && sysctl -w net.ipv6.conf.default.disable_ipv6=0 && ip -6 addr add ::1 dev lo && cd vyos-1x && dpkg-buildpackage -uc -us -tc -b"
+          docker run --platform linux/arm64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current-arm64 bash -c "sysctl -w net.ipv6.conf.all.disable_ipv6=0 && sysctl -w net.ipv6.conf.default.disable_ipv6=0 && ip -6 addr add ::1 dev lo && cd vyos-1x && dpkg-buildpackage -uc -us -tc -b"
           ls -al ./vyos-1x*.deb
           pwd
           ls
