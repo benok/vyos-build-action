@@ -87,8 +87,8 @@ jobs:
           docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture amd64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
       - name: Test iso
         run: |
-          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
-          docker run --platform linux/amd64 --rm --privileged -v ~/vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
+          docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
+          docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
           sudo rm -rf vyos-build-test-amd64
 
   test_arm64:
@@ -109,8 +109,8 @@ jobs:
           docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
       - name: Test iso
         run: |
-          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
-          docker run --platform linux/arm64 --rm --privileged -v ~/vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
+          docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
+          docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
 
   build_amd64:
     needs: test_amd64
