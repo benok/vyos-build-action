@@ -107,6 +107,11 @@ jobs:
       - name: build iso
         run: |
           docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
+      - name: please test arm64 images
+        run: |
+          echo "please test arm64 images"
+          ls ./vyos-build-test-arm64/build/
+          cp ./vyos-build-test-arm64/build/live-image-arm64.hybrid.iso ./vyos-build-test-arm64/build/live-image-amd64.hybrid.iso
       - name: Test iso
         run: |
           docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
