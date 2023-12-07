@@ -36,41 +36,41 @@ jobs:
   #         docker run --platform linux/arm64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current-arm64 bash -c "sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 && sudo sysctl -w net.ipv6.conf.default.disable_ipv6=0 && sudo ip -6 addr add ::1 dev lo && cd vyos-1x && dpkg-buildpackage -uc -us -tc -b"
   #         ls -al ./vyos-1x*.deb
 
-  # build_container:
-  #   # needs: build_package
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Add Buildx
-  #       uses: docker/setup-buildx-action@v2
-  #     - name: Add qemu
-  #       uses: docker/setup-qemu-action@v2
-  #     - name: CheckOut
-  #       uses: actions/checkout@v4.1.1
-  #     - name: Set up Docker Buildx
-  #       id: buildx
-  #       uses: docker/setup-buildx-action@v3.0.0
-  #       with:
-  #         platforms: linux/amd64,linux/arm64
-  #     - name: Log in to GitHub Container Registry
-  #       uses: docker/login-action@v2
-  #       with:
-  #         registry: ghcr.io
-  #         username: ${{ github.actor }}
-  #         password: ${{ secrets.GITHUB_TOKEN }}
-  #     - name: clone
-  #       run: git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build
-  #     - name: Build and Push to GitHub Container Registry
-  #       uses: docker/build-push-action@v3
-  #       with:
-  #         context: ./vyos-build/docker
-  #         platforms: linux/amd64,linux/arm64
-  #         builder: ${{ steps.buildx.outputs.name }}
-  #         push: true
-  #         tags: ghcr.io/${{ github.repository_owner }}/vyos-build-actions:${{ env.BRANCH }}
-  #         labels: ${{ env.BRANCH }}
+  build_container:
+    # needs: build_package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Add qemu
+        uses: docker/setup-qemu-action@v2
+      - name: CheckOut
+        uses: actions/checkout@v4.1.1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3.0.0
+        with:
+          platforms: linux/amd64,linux/arm64
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: clone
+        run: git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build
+      - name: Build and Push to GitHub Container Registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ./vyos-build/docker
+          platforms: linux/amd64,linux/arm64
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/vyos-build-actions:${{ env.BRANCH }}
+          labels: ${{ env.BRANCH }}
 
   test_amd64:
-    # needs: build_container
+    needs: build_container
     runs-on: ubuntu-latest
     steps:
       - name: Add Buildx
@@ -92,7 +92,7 @@ jobs:
           sudo rm -rf vyos-build-test-amd64
 
   test_arm64:
-    # needs: build_container
+    needs: build_container
     runs-on: ubuntu-latest
     steps:
       - name: Add Buildx
@@ -118,7 +118,7 @@ jobs:
           docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
 
   build_amd64:
-    needs: test_amd64
+    needs: build_container
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/ragujp/vyos-build-actions:current
@@ -141,7 +141,7 @@ jobs:
           path: vyos-build/build/vyos-${{ env.VERSION }}-*.iso
 
   build_arm64:
-    needs: test_arm64
+    needs: build_container
     runs-on: ubuntu-latest
     steps:
       - name: Clone source code
