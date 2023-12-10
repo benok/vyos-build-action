@@ -91,31 +91,31 @@ jobs:
           docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
           sudo rm -rf vyos-build-test-amd64
 
-  test_arm64:
-    needs: build_container
-    runs-on: ubuntu-latest
-    steps:
-      - name: Add Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Add qemu
-        uses: docker/setup-qemu-action@v2
-      - name: CheckOut
-        uses: actions/checkout@v4.1.1
-      - name: clone
-        run: |
-          git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-arm64
-      - name: build iso
-        run: |
-          docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
-      - name: please test arm64 images
-        run: |
-          echo "please test arm64 images"
-          ls ./vyos-build-test-arm64/build/
-          cp ./vyos-build-test-arm64/build/live-image-arm64.hybrid.iso ./vyos-build-test-arm64/build/live-image-amd64.hybrid.iso
-      - name: Test iso
-        run: |
-          docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
-          docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
+  # test_arm64:
+  #   needs: build_container
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Add Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #     - name: Add qemu
+  #       uses: docker/setup-qemu-action@v2
+  #     - name: CheckOut
+  #       uses: actions/checkout@v4.1.1
+  #     - name: clone
+  #       run: |
+  #         git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-arm64
+  #     - name: build iso
+  #       run: |
+  #         docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
+  #     - name: please test arm64 images
+  #       run: |
+  #         echo "please test arm64 images"
+  #         ls ./vyos-build-test-arm64/build/
+  #         cp ./vyos-build-test-arm64/build/live-image-arm64.hybrid.iso ./vyos-build-test-arm64/build/live-image-amd64.hybrid.iso
+  #     - name: Test iso
+  #       run: |
+  #         docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
+  #         docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
 
   build_amd64:
     needs: build_container
@@ -140,25 +140,25 @@ jobs:
           name: vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso
           path: vyos-build/build/vyos-${{ env.VERSION }}-*.iso
 
-  build_arm64:
-    needs: build_container
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone source code
-        run: git clone -b $BRANCH --single-branch $GIT_CLONE_URL
+  # build_arm64:
+  #   needs: build_container
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Clone source code
+  #       run: git clone -b $BRANCH --single-branch $GIT_CLONE_URL
 
-      - name: Build ISO
-        run: |
-          docker run --rm --platform linux/arm64 --privileged -v ./vyos-build/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --version $VERSION-$(date +%Y%m%d%H%M) iso
+  #     - name: Build ISO
+  #       run: |
+  #         docker run --rm --platform linux/arm64 --privileged -v ./vyos-build/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --version $VERSION-$(date +%Y%m%d%H%M) iso
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: vyos-${{ env.VERSION }}-arm64-iso
-          path: vyos-build/build/vyos-${{ env.VERSION }}-*.iso
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: vyos-${{ env.VERSION }}-arm64-iso
+  #         path: vyos-build/build/vyos-${{ env.VERSION }}-*.iso
 
   release:
-    needs: [build_amd64, build_arm64]
+    needs: [build_amd64]
     runs-on: ubuntu-latest
 
     steps:
