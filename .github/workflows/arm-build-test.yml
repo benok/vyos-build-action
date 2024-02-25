@@ -28,11 +28,8 @@ jobs:
         uses: actions/checkout@v4.1.1
       - name: build and test
         run: |
-          wget https://downloads.nestybox.com/sysbox/releases/v0.6.3/sysbox-ce_0.6.3-0.linux_amd64.deb
-          sudo apt-get install jq
-          sudo apt-get install ./sysbox-ce_0.6.3-0.linux_amd64.deb
           uname -a
-          docker run --platform linux/arm64/v8 --runtime=sysbox-runc cruizba/ubuntu-dind  << EOF
+          docker run --platform linux/arm64/v8 --privileged cruizba/ubuntu-dind  << EOF
             uname -a
             dpkg --print-architecture
             sudo docker version
