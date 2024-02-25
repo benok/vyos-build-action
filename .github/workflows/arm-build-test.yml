@@ -28,6 +28,7 @@ jobs:
           uname -a
           docker run --platform linux/arm64/v8 -i -v $PWD:/ws ubuntu:22.04 bash << EOF
             uname -a
+            dpkg --print-architecture
             apt-get update
             apt-get install ca-certificates curl git sudo -y
             sudo install -m 0755 -d /etc/apt/keyrings
