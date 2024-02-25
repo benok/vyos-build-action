@@ -9,7 +9,7 @@ on:
 env:
   GIT_CLONE_URL: https://github.com/vyos/vyos-build
   BRANCH: current
-  ARCHITECTURE: amd64
+  ARCHITECTURE: arm64
   BUILD_BY: vyos-build-action@github.com
   BUILD_TYPE: release
   VERSION: 1.5-rolling
@@ -88,9 +88,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          asset_amd64=$(find ./vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso/ -name "vyos-${{ env.VERSION }}-*.iso" | xargs)
+          asset_arm64=$(find ./vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso/ -name "vyos-${{ env.VERSION }}-*.iso" | xargs)
           tag_name="v${{ env.VERSION }}"
-          gh release upload "$tag_name" "$asset_amd64"
+          gh release upload "$tag_name" "$asset_arm64"
   notificate:
     runs-on: ubuntu-latest
     if: failure()
