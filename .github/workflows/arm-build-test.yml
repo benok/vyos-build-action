@@ -29,22 +29,10 @@ jobs:
       - name: build and test
         run: |
           uname -a
-          docker run --privileged --platform linux/arm64/v8 -i -v $PWD:/ws ubuntu:22.04 bash << EOF
+          docker run --platform linux/arm64/v8 -it --runtime=sysbox-runc cruizba/ubuntu-dind  << EOF
             uname -a
             dpkg --print-architecture
-            apt-get update
-            apt-get install ca-certificates curl git sudo -y
-            sudo install -m 0755 -d /etc/apt/keyrings
-            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-            sudo chmod a+r /etc/apt/keyrings/docker.asc
-            echo \
-              "deb [arch=arm64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-              jammy stable" | \
-              sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-            sudo apt-get update
-            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
             sudo docker version
-            sudo systemctl start docker
             git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-arm64
             sudo docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
             sudo docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
