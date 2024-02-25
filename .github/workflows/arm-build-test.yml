@@ -29,7 +29,7 @@ jobs:
       - name: build and test
         run: |
           uname -a
-          docker run --platform linux/arm64/v8 -i -v $PWD:/ws ubuntu:22.04 bash << EOF
+          docker run --privileged --platform linux/arm64/v8 -i -v $PWD:/ws ubuntu:22.04 bash << EOF
             uname -a
             dpkg --print-architecture
             apt-get update
