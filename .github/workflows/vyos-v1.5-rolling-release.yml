@@ -175,9 +175,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           asset_amd64=$(find ./vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso/ -name "vyos-${{ env.VERSION }}-*.iso" | xargs)
-          asset_arm64=$(find ./vyos-${{ env.VERSION }}-arm64-iso/ -name "vyos-${{ env.VERSION }}-*.iso" | xargs)
           tag_name="v${{ env.VERSION }}"
-          gh release upload "$tag_name" "$asset_amd64" "$asset_arm64"
+          gh release upload "$tag_name" "$asset_amd64"
   notificate:
     runs-on: ubuntu-latest
     if: failure()
