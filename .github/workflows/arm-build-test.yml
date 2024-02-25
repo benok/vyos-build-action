@@ -45,14 +45,9 @@ jobs:
             sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
             sudo docker version
             git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-arm64
-            cd vyos-build-test-arm64
-            sudo docker build -t vyos/vyos-build:current docker
-            sudo docker run --platform linux/arm64 --rm -it --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current << EOF
-              sudo make clean
-              sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
-              sudo make test
-              sudo make testc
-            EOF
+            sudo docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
+            sudo docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
+            sudo docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
           EOF
       - name: clone
         run: |
