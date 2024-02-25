@@ -29,7 +29,7 @@ jobs:
       - name: build and test
         run: |
           uname -a
-          docker run --rm --platform linux/arm64/v8 --privileged ghcr.io/ragujp/dind:main bash  <<'EOF'
+          docker run --rm --platform linux/arm64/v8 --privileged ghcr.io/ragujp/dind:main bash -c  <<'EOF'
             uname -a
             dpkg --print-architecture
             sudo docker version
