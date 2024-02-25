@@ -23,6 +23,15 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: CheckOut
         uses: actions/checkout@v4.1.1
+      - name: build and test
+        run: |
+          docker run --platform linux/arm/v7 -i -v $PWD:/ws ubuntu:22.04 bash << EOF
+            uname -a
+            git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-arm64
+            docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
+            docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
+            docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make testc
+          EOF
       - name: clone
         run: |
           git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-arm64
