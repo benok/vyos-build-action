@@ -27,6 +27,17 @@ jobs:
         run: |
           docker run --platform linux/arm/v7 -i -v $PWD:/ws ubuntu:22.04 bash << EOF
             uname -a
+            sudo apt-get update
+            sudo apt-get install ca-certificates curl git
+            sudo install -m 0755 -d /etc/apt/keyrings
+            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+            sudo chmod a+r /etc/apt/keyrings/docker.asc
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+              $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+              sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            udo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-arm64
             docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture arm64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
             docker run --platform linux/arm64 --rm --privileged -v ./vyos-build-test-arm64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
