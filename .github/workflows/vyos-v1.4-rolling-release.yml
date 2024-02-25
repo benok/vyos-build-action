@@ -15,7 +15,7 @@ env:
   BUILD_BY: vyos-build-action@github.com
   BUILD_TYPE: release
   VERSION: 1.4-rolling
-  DEBIAN_MIRROR: http://ftp.us.debian.org/debian/
+  DEBIAN_MIRROR: https://mirrors.xtom.jp/debian/
 
 jobs:
   build:
