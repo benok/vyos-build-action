@@ -29,27 +29,23 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     container:
-      image: vyos/vyos-build:equuleus
+      image: vyos/vyos-build:$BRANCH
       options: --workdir /vyos --privileged
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Clone Source Code
+      - name: Clone source code
         run: |
           git clone -b $BRANCH --single-branch $GIT_CLONE_URL $WORKING_DIR
           cd $WORKING_DIR
-          ./configure --architecture $BUILD_ARCH --build-by $BUILD_BY --build-type $BUILD_TYPE --version $BUILD_VERSION
           mkdir -p ./$ARTIFACTS_DIR
-      - name: Build ISO Image
-        id: iso
-        working-directory: ./${{ env.WORKING_DIR }}
+
+      - name: Build ISO
+        working-directory: ./$WORKING_DIR
         run: |
-          make iso && echo $STATUS_SUCCESS
-          cp -f ./build/vyos-$BUILD_VERSION-$BUILD_ARCH.iso ./$ARTIFACTS_DIR/
+          sudo make clean
+          sudo ./build-vyos-image iso --architecture $ARCHITECTURE --build-by $BUILD_BY --build-type $BUILD_TYPE --version $VERSION-$(date +%Y%m%d%H%M)
+          cp -f ./$WORKING_DIR/build/vyos-${{ env.VERSION }}-*.iso ./$ARTIFACTS_DIR/
 
       - name: Build QEMU Image
         id: qemu
