@@ -44,12 +44,12 @@ jobs:
           cd $WORKING_DIR
           ./configure --architecture $BUILD_ARCH --build-by $BUILD_BY --build-type $BUILD_TYPE --version $BUILD_VERSION
           mkdir -p ./$ARTIFACTS_DIR
-          - name: Build ISO Image
-          id: iso
-          working-directory: ./${{ env.WORKING_DIR }}
-          run: |
-            make iso && echo $STATUS_SUCCESS
-            cp -f ./build/vyos-$BUILD_VERSION-$BUILD_ARCH.iso ./$ARTIFACTS_DIR/
+      - name: Build ISO Image
+        id: iso
+        working-directory: ./${{ env.WORKING_DIR }}
+        run: |
+          make iso && echo $STATUS_SUCCESS
+          cp -f ./build/vyos-$BUILD_VERSION-$BUILD_ARCH.iso ./$ARTIFACTS_DIR/
 
       - name: Build QEMU Image
         id: qemu
