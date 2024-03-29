@@ -76,7 +76,7 @@ jobs:
         working-directory: ./vyos-build
         run: |
           sudo make clean
-          sudo ./build-vyos-image iso --architecture amd64 --build-by $BUILD_BY --build-type $BUILD_TYPE --version $VERSION-$(date +%Y%m%d%H%M) --debian-mirror $DEBIAN_MIRROR
+          sudo ./build-vyos-image iso --architecture $BUILD_ARCH --build-by $BUILD_BY --build-type $BUILD_TYPE --version $BUILD_VERSION-$(date +%Y%m%d%H%M) --debian-mirror $DEBIAN_MIRROR
       # cp -f ./$WORKING_DIR/build/vyos-${{ env.BUILD_VERSION }}-*.iso ./$ARTIFACTS_DIR/
       # - name: Build QEMU Image
       #   id: qemu
@@ -109,8 +109,8 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso
-          path: vyos-build/build/vyos-${{ env.VERSION }}-*.iso
+          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-iso
+          path: vyos-build/build/vyos-${{ env.BUILD_VERSION }}-*.iso
         # name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-images
         # path: ${{ env.WORKING_DIR }}/${{ env.ARTIFACTS_DIR }}
 
@@ -125,16 +125,16 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso
-          path: vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso
+          name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-iso
+          path: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-iso
         #  name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-images
 
       - name: Upload release asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          asset=$(find ./vyos-${{ env.VERSION }}-${{ env.ARCHITECTURE }}-iso/ -name "vyos-${{ env.VERSION }}-*.iso" | xargs)
-          tag_name="v${{ env.VERSION }}"
+          asset=$(find ./vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-iso/ -name "vyos-${{ env.VERSION }}-*.iso" | xargs)
+          tag_name="v${{ env.BUILD_VERSION }}"
           gh release upload "$tag_name" "$asset"
       # - name: Release
       #   uses: softprops/action-gh-release@v1
