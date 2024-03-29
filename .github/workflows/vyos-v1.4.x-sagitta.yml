@@ -68,7 +68,7 @@ jobs:
     steps:
       - name: Clone source code
         run: |
-          git clone -b $BRANCH --single-branch $GIT_CLONE_URL $WORKING_DIR
+          git clone -b $BRANCH --single-branch $GIT_CLONE_URL
         # cd $WORKING_DIR
         # mkdir -p ./$ARTIFACTS_DIR
 
