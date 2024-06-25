@@ -18,12 +18,41 @@ env:
   DEBIAN_MIRROR: https://mirrors.xtom.jp/debian/
 
 jobs:
-  build:
+  build_container:
+    # needs: build_package
     runs-on: ubuntu-latest
-    container:
-      image: vyos/vyos-build:sagitta
-      options: --workdir /vyos --privileged
-
+    steps:
+      - name: Add Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Add qemu
+        uses: docker/setup-qemu-action@v2
+      - name: CheckOut
+        uses: actions/checkout@v4.1.1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3.0.0
+        with:
+          platforms: linux/amd64,linux/arm64
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: clone
+        run: git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build
+      - name: Build and Push to GitHub Container Registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ./vyos-build/docker
+          platforms: linux/amd64,linux/arm64
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/vyos-build-actions:${{ env.BRANCH }}
+          labels: ${{ env.BRANCH }}
+  build:
+    needs: build_container
+    runs-on: ubuntu-latest
     steps:
       - name: Clone source code
         run: git clone -b $BRANCH --single-branch $GIT_CLONE_URL
