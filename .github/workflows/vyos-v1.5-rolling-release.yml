@@ -84,7 +84,7 @@ jobs:
           git clone -b $BRANCH --single-branch $GIT_CLONE_URL vyos-build-test-amd64
       - name: build iso
         run: |
-          docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture amd64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" iso
+          docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo --preserve-env ./build-vyos-image --architecture amd64 --build-by $BUILD_BY --vyos-mirror $VYOS_MIRROR --debian-mirror $DEBIAN_MIRROR --build-type $BUILD_TYPE --custom-package vyos-1x-smoketest --version "${VERSION}" generic
       - name: Test iso
         run: |
           docker run --platform linux/amd64 --rm --privileged -v ./vyos-build-test-amd64/:/vyos -w /vyos ghcr.io/ragujp/vyos-build-actions:current sudo make test
