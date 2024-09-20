@@ -133,8 +133,8 @@ jobs:
         run: |
           sudo make clean
           sudo ./build-vyos-image generic --architecture $ARCHITECTURE --build-by $BUILD_BY --build-type $BUILD_TYPE --version $VERSION-$(date +%Y%m%d%H%M) --vyos-mirror $VYOS_MIRROR
-          sudo make qemu
-          sudo make vmware
+        #sudo make qemu
+        #sudo make vmware
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
