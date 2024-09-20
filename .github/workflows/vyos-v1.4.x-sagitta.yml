@@ -107,7 +107,7 @@ jobs:
       #     cp -f ./build/vyos_vmware_image-signed.ova ./$ARTIFACTS_DIR/vyos-$BUILD_VERSION-$BUILD_ARCH-vmware-signed.ova
       #     cp -f ./build/vyos_vmware_image.vmdk ./$ARTIFACTS_DIR/vyos-$BUILD_VERSION-$BUILD_ARCH-vmware.vmdk
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-iso
           path: vyos-build/build/vyos-${{ env.BUILD_VERSION }}-*.iso
@@ -123,7 +123,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-iso
           path: vyos-${{ env.BUILD_VERSION }}-${{ env.BUILD_ARCH }}-iso
