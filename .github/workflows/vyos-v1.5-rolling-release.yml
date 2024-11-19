@@ -15,7 +15,7 @@ env:
   BUILD_BY: vyos-build-action@github.com
   BUILD_TYPE: release
   VERSION: 1.5-rolling
-  DEBIAN_MIRROR: https://mirrors.xtom.jp/debian/
+  DEBIAN_MIRROR: http://cdn-fastly.deb.debian.org/debian/
   VYOS_MIRROR: https://rolling-packages.vyos.net/current/
 
 jobs:
