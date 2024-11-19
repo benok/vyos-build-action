@@ -10,6 +10,7 @@ on:
 
 env:
   GIT_CLONE_URL: https://github.com/vyos/vyos-build
+  # VYOS_BRANCH
   BRANCH: current
   ARCHITECTURE: amd64
   BUILD_BY: vyos-build-action@github.com
@@ -29,11 +30,11 @@ jobs:
   #     - name: CheckOut
   #       uses: actions/checkout@v4
   #     - name: clone
-  #       run: git clone https://github.com/vyos/vyos-1x
+  #       run: git clone https://github.com/vyos/vyos-1x -b $BRANCH
   #     - name: build
   #       run: |
-  #         docker run --platform linux/amd64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current bash -c "sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 && sudo sysctl -w net.ipv6.conf.default.disable_ipv6=0 && sudo ip -6 addr add ::1 dev lo && cd vyos-1x && dpkg-buildpackage -uc -us -tc -b"
-  #         docker run --platform linux/arm64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current-arm64 bash -c "sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 && sudo sysctl -w net.ipv6.conf.default.disable_ipv6=0 && sudo ip -6 addr add ::1 dev lo && cd vyos-1x && dpkg-buildpackage -uc -us -tc -b"
+  #         docker run --platform linux/amd64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:${{ env.BRANCH }} bash -c "sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 && sudo sysctl -w net.ipv6.conf.default.disable_ipv6=0 && sudo ip -6 addr add ::1 dev lo && cd vyos-1x && dpkg-buildpackage -uc -us -tc -b"
+  #         docker run --platform linux/arm64 --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:${{ env.BRANCH }}-arm64 bash -c "sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0 && sudo sysctl -w net.ipv6.conf.default.disable_ipv6=0 && sudo ip -6 addr add ::1 dev lo && cd vyos-1x && dpkg-buildpackage -uc -us -tc -b"
   #         ls -al ./vyos-1x*.deb
 
   build_container:
